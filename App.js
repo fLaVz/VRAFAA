@@ -18,7 +18,7 @@ const RootStack = createStackNavigator(
 
 const AppContainer = createAppContainer(RootStack);
 
-// Returning default entry point view which is Login
+// Returns default entry point view which is Login
 export default class App extends React.Component {
     render() {
         return <AppContainer />;

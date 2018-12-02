@@ -3,13 +3,7 @@ import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, T
  
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
-        title: 'Welcome',
-        headerStyle: {
-            backgroundColor: '#212942',
-            shadowColor: 'transparent', // Both below attributes removes ugly white buged default border
-            borderBottomWidth: 0,
-        },
-        headerTintColor: '#fff',
+        header: null,
     };
     constructor(props) {
         super(props);
@@ -23,6 +17,7 @@ export default class LoginScreen extends React.Component {
         Alert.alert('Credentials', `${username} : ${password}`);
     }
     render() {
+        const {navigate} = this.props.navigation;
         return (
             <ImageBackground source={require('../assets/bg.png')} style={ styles.container }>
                 <View style={styles.container}>
@@ -45,7 +40,7 @@ export default class LoginScreen extends React.Component {
                     <TouchableOpacity
                         title={'Login'}
                         style={styles.loginButton}
-                        onPress={this.onLogin.bind(this)}
+                        onPress={() => navigate('Wall')/*this.onLogin.bind(this)*/}
                         underlayColor='#fff'
                     >
                     <Text style={styles.loginText}>Login</Text>
