@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, List, ListItem, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 
 export default class WallScreen extends React.Component {
 
     constructor(props) {
         super(props)
-
+        
+        // Sample, data comes from API request
         this.state = {
             "users": 
             [

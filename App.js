@@ -1,20 +1,23 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert, TextInput, Button, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
-import { createStackNavigator, createAppContainer } from "react-navigation";
-import LoginScreen from './components/LoginScreen'
-import WallScreen from './components/WallScreen'
+import { createStackNavigator, createAppContainer, createBottomTabNavigator } from "react-navigation";
+import LoginScreen from './components/LoginScreen';
+import WallScreen from './components/WallScreen';
+import CreateAccountScreen from './components/CreateAccount';
+import BottomNavigator from './components/BottomNavigator'
 
 // Creates navigation
 const RootStack = createStackNavigator(
     {
         Login: LoginScreen,
         Wall: WallScreen,
+        CreateAccount: CreateAccountScreen,
+        Bottom: BottomNavigator
     },
     {
         initialRouteName: 'Login',
     }
 );
-
 
 const AppContainer = createAppContainer(RootStack);
 

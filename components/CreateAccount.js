@@ -1,11 +1,21 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
- 
+
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
-        header: null,
+        title: 'Create Account',
+        mode: 'modal',
+        headerMode: 'float',
+        headerTransitionPreset: 'fade-in-place',
+        animationType: 'none',
+        headerStyle: {
+            backgroundColor: '#1e2937',
+            shadowColor: 'transparent', // Both below attributes removes ugly white buged default border
+            borderBottomWidth: 0,
+        },
+        headerTintColor: '#fff',
     };
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -20,7 +30,7 @@ export default class LoginScreen extends React.Component {
     render() {
         const {navigate} = this.props.navigation;
         return (
-            <ImageBackground source={require('../assets/bg.png')} style={ styles.container }>
+            <View style={styles.container}>
                 <View style={styles.form}>
                     <StatusBar
                         barStyle='light-content'
@@ -44,18 +54,10 @@ export default class LoginScreen extends React.Component {
                         onPress={() => navigate('Wall')/*this.onLogin.bind(this)*/}
                         underlayColor='#fff'
                     >
-                    <Text style={styles.loginText}>Login</Text>
+                    <Text style={styles.loginText}>Create</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        title={'Login'}
-                        style={styles.create}
-                        onPress={() => navigate('CreateAccount')/*this.onLogin.bind(this)*/}
-                        underlayColor='#fff'
-                    >
-                    <Text style={styles.createText}>Créer un compte</Text>
-                    </TouchableOpacity> 
                 </View>
-            </ImageBackground>
+            </View>
         );
     }
 }
@@ -66,9 +68,10 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: '#171f2a'
     },
     form: {
-        marginTop: -150,
+        marginTop: -200,
         alignItems: 'center'
     },
     input: {
