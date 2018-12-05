@@ -36,7 +36,16 @@ export default class WallScreen extends React.Component {
             shadowColor: 'transparent', // Both below attributes removes ugly white buged default border
             borderBottomWidth: 0,
         },
-        headerTintColor: '#fff',
+        headerTintColor: '#2a3d5b',
+        tabBarOptions: {
+            activeTintColor: '#0787f7',
+            labelStyle: {
+              fontSize: 12,
+            },
+            style: {
+              backgroundColor: '#2a3d5b',
+            },
+          }
     };
     render() {
         return (

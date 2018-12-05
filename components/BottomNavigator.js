@@ -5,9 +5,6 @@ import WallScreen from './WallScreen';
 const SettingsTabs = createBottomTabNavigator({
     Wall: {
         screen: WallScreen,
-        navigationOptions: {
-            title: "padjodazdf",
-        }
     },
 });
 

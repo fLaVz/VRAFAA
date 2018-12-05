@@ -41,7 +41,7 @@ export default class LoginScreen extends React.Component {
                     <TouchableOpacity
                         title={'Login'}
                         style={styles.loginButton}
-                        onPress={() => navigate('Wall')/*this.onLogin.bind(this)*/}
+                        onPress={() => navigate('Bottom')/*this.onLogin.bind(this)*/}
                         underlayColor='#fff'
                     >
                     <Text style={styles.loginText}>Login</Text>

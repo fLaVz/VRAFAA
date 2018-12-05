@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
 
-export default class LoginScreen extends React.Component {
+export default class CreateAccount extends React.Component {
     static navigationOptions = {
         title: 'Create Account',
         mode: 'modal',
