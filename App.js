@@ -10,12 +10,23 @@ import BottomNavigator from './components/BottomNavigator'
 const RootStack = createStackNavigator(
     {
         Login: LoginScreen,
-        Wall: WallScreen,
+        // Wall: WallScreen,
         CreateAccount: CreateAccountScreen,
         Bottom: BottomNavigator
     },
     {
-        initialRouteName: 'Login',
+        defaultNavigationOptions: {
+            initialRouteName: 'Login',
+            mode: 'card',
+            headerMode: 'float',
+            headerTransitionPreset: 'fade-in-place',
+            headerStyle: {
+                backgroundColor: '#1e2937',
+                shadowColor: '#fff', // Both below attributes removes ugly white buged default border
+                borderBottomWidth: 0,
+            },
+            headerTintColor: '#f74307',
+        }
     },
 );
 

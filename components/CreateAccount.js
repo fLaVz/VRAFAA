@@ -2,19 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
 
 export default class CreateAccount extends React.Component {
-    static navigationOptions = {
-        title: 'Create Account',
-        mode: 'modal',
-        headerMode: 'float',
-        headerTransitionPreset: 'fade-in-place',
-        animationType: 'none',
-        headerStyle: {
-            backgroundColor: '#1e2937',
-            shadowColor: 'transparent', // Both below attributes removes ugly white buged default border
-            borderBottomWidth: 0,
-        },
-        headerTintColor: '#fff',
-    };
 
     constructor(props) {
         super(props);

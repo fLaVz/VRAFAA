@@ -27,25 +27,6 @@ export default class WallScreen extends React.Component {
     }
     static navigationOptions = {
         title: 'Artisans',
-        mode: 'modal',
-        headerMode: 'float',
-        headerTransitionPreset: 'fade-in-place',
-        headerLeft: null,
-        headerStyle: {
-            backgroundColor: '#1e2937',
-            shadowColor: 'transparent', // Both below attributes removes ugly white buged default border
-            borderBottomWidth: 0,
-        },
-        headerTintColor: '#2a3d5b',
-        tabBarOptions: {
-            activeTintColor: '#0787f7',
-            labelStyle: {
-              fontSize: 12,
-            },
-            style: {
-              backgroundColor: '#2a3d5b',
-            },
-          }
     };
     render() {
         return (
