@@ -8,7 +8,7 @@ const SettingsTabs = createBottomTabNavigator({
     Wall: {
         screen: WallScreen,
         navigationOptions: {
-            tabBarIcon: ({tintColor}) => <Ionicons name='ios-aperture' size={30} color={tintColor}/>
+            tabBarIcon: ({tintColor}) => <Ionicons name='ios-aperture' size={30} color={tintColor}/>,
         }
     },
     Add: {

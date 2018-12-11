@@ -10,32 +10,27 @@ import BottomNavigator from './components/BottomNavigator'
 const RootStack = createStackNavigator(
     {
         Login: LoginScreen,
-        Create: {
+        CreateAccount: {
             screen: CreateAccountScreen,
             navigationOptions: {
-                headerTitle: 'CreateAccount',
-                headerBackTitle: 'Login',
+                title: 'CreateAccount',
             }
         },
-        Bottom: {   
-            screen: BottomNavigator,
-            navigationOptions: ({navigaton}) => ({
-                title: 'Artisans',
-                headerLeft: null
-            })
-        },
+        Bottom: BottomNavigator,
         Wall: {
             screen: WallScreen,
-            headertitle: 'TEST'
+            navigationOptions: {
+                title: 'test',
+                headerLeft: null
+            }
         }
     },
     {
         defaultNavigationOptions: {
             initialRouteName: 'Login',
             mode: 'modal',
-            headerMode: 'float',
+            headerMode: 'screen',
             headerTransitionPreset: 'fade-in-place',
-            // headerBackTitle: 'Login',
             // headerLeft: null,
             headerStyle: {
                 backgroundColor: '#1e2937',

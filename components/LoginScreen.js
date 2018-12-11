@@ -49,7 +49,7 @@ export default class LoginScreen extends React.Component {
                     <TouchableOpacity
                         title={'Login'}
                         style={styles.create}
-                        onPress={() => navigate('CreateAccount')/*this.onLogin.bind(this)*/}
+                        onPress={() => navigate('Create')/*this.onLogin.bind(this)*/}
                         underlayColor='#fff'
                     >
                     <Text style={styles.createText}>Créer un compte</Text>
