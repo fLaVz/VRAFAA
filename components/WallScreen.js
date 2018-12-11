@@ -25,6 +25,9 @@ export default class WallScreen extends React.Component {
             ]
         }
     }
+    static defaultNavigationOptions = {
+        title: 'test',
+    }
     static navigationOptions = {
         title: 'Artisans',
     };

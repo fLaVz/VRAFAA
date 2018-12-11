@@ -1,42 +1,40 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Picker} from 'react-native';
 
 export default class WallScreen extends React.Component {
 
     constructor(props) {
         super(props)
+
+        this.state = {
+            name: '',
+            file: '',
+        }
     }
     static navigationOptions = {
         title: 'Ajouter',
     };
     render() {
+        const {navigate} = this.props.navigation;
         return (
-            <View style={styles.form}>
-            <StatusBar
-                barStyle='dark-content'
-            />
-            <TextInput
-                value={this.state.email}
-                onChangeText={(email) => this.setState({ email })}
-                placeholder={'Email'}
-                style={styles.input}
-            />
-            <TextInput
-                value={this.state.password}
-                onChangeText={(password) => this.setState({ password })}
-                placeholder={'Password'}
-                secureTextEntry={true}
-                style={styles.input}
-            />
-            <TouchableOpacity
-            title={'Add'}
-                style={styles.artisanButton}
-                onPress={() => navigate('Bottom')/*this.onLogin.bind(this)*/}
-                underlayColor='#fff'
-            >
-            <Text style={styles.artisanText}>Ajouter un Artisan</Text>
-            </TouchableOpacity>
-        </View>
+            <View style={styles.container}>
+                <View style={styles.form}>
+                    <TextInput
+                        value={this.state.name}
+                        onChangeText={(name) => this.setState({ name })}
+                        placeholder={'Nom de l\'artisan'}
+                        style={styles.input}
+                    />
+                    <TouchableOpacity
+                    title={'Add'}
+                        style={styles.artisanButton}
+                        onPress={() => navigate('Wall')}
+                        underlayColor='#fff'
+                    >
+                    <Text style={styles.artisanText}>Ajouter un Artisan</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         );
     }
 }
@@ -47,6 +45,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: '#171f2a'
     },
     form: {
         marginTop: -150,

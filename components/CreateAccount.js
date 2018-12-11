@@ -2,7 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
 
 export default class CreateAccount extends React.Component {
-
+    static navigationOptions = {
+        title: 'Create Account',
+    }
     constructor(props) {
         super(props);
         this.state = {
