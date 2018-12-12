@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, TextInput, Button, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from "react-navigation";
 import LoginScreen from './components/LoginScreen';
 import WallScreen from './components/WallScreen';
@@ -19,7 +18,7 @@ const RootStack = createStackNavigator(
         },
         Bottom: {   
             screen: BottomNavigator,
-            navigationOptions: ({navigaton}) => ({
+            navigationOptions: ({navigation}) => ({
                 title: 'Artisans',
                 headerLeft: null
             })
@@ -29,14 +28,14 @@ const RootStack = createStackNavigator(
             headertitle: 'TEST'
         }
     },
-    {
+    { 
+        initialRouteName: 'Login',
+        mode: 'modal',
+        
         defaultNavigationOptions: {
-            initialRouteName: 'Login',
-            mode: 'modal',
-            headerMode: 'float',
+            headerMode: 'screen',
             headerTransitionPreset: 'fade-in-place',
-            // headerBackTitle: 'Login',
-            // headerLeft: null,
+            headerBackTitle: 'Login',
             headerStyle: {
                 backgroundColor: '#1e2937',
                 shadowColor: '#fff', // Both below attributes removes ugly white buged default border
@@ -44,6 +43,7 @@ const RootStack = createStackNavigator(
             },
             headerTintColor: '#fff',
         }
+        
     },
 );
 

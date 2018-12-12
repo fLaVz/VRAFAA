@@ -1,22 +1,46 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Picker} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard} from 'react-native';
+import { ImagePicker } from 'expo';
 
-export default class WallScreen extends React.Component {
+export default class AddScreen extends React.Component {
 
     constructor(props) {
         super(props)
-
+        
         this.state = {
             name: '',
             file: '',
+            video: null,
+            maxLength: 120000
         }
     }
     static navigationOptions = {
         title: 'Ajouter',
     };
+    _pickImage = async () => {
+        Keyboard.dismiss()
+        let permission = await Expo.Permissions.askAsync(Expo.Permissions.CAMERA_ROLL);
+        if (permission.status === 'granted') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                mediaTypes: 'Videos'
+            });              
+            console.log(result);
+            console.log('Artisans name: ' + this.state.name)
+            if(result.duration < this.state.maxLength && !result.cancelled) {
+                this.setState({ image: result });
+            }
+            else {
+                alert('Veuillez selectionner une vidéo de 2 minutes maximum');
+            }
+        }
+    };
+    
     render() {
         const {navigate} = this.props.navigation;
-        return (
+        let { image } = this.state;
+        return(
             <View style={styles.container}>
                 <View style={styles.form}>
                     <TextInput
@@ -25,6 +49,14 @@ export default class WallScreen extends React.Component {
                         placeholder={'Nom de l\'artisan'}
                         style={styles.input}
                     />
+                    <TouchableOpacity
+                        title={'Video'}
+                        style={styles.videoButton}
+                        onPress={this._pickImage}
+                        underlayColor='#fff'
+                    >
+                    <Text style={styles.artisanText}>Choisir Vidéo</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity
                     title={'Add'}
                         style={styles.artisanButton}
@@ -76,4 +108,16 @@ const styles = StyleSheet.create({
     artisanText: {
         color: '#fff'
     },
+    videoButton: {
+        alignItems: 'center',
+        marginTop: 8,
+        marginBottom: 60,
+        padding: 10,
+        width: 200,
+        borderRadius: 20,
+        borderWidth: 1,
+        backgroundColor: '#1456a8',
+        borderColor: '#1e2937',
+        color: 'white'
+    }
 });
