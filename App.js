@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer, createBottomTabNavigator } from "react-navigation";
+import { createStackNavigator, createAppContainer } from "react-navigation";
 import LoginScreen from './components/LoginScreen';
 import WallScreen from './components/WallScreen';
 import CreateAccountScreen from './components/CreateAccount';
@@ -20,7 +20,7 @@ const RootStack = createStackNavigator(
             screen: BottomNavigator,
             navigationOptions: ({navigation}) => ({
                 title: 'Artisans',
-                headerLeft: null
+                // headerLeft: null  // disabled for tests
             })
         },
         Wall: {

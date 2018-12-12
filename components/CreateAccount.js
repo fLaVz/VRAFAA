@@ -1,18 +1,32 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, StatusBar, TouchableOpacity, Keyboard } from 'react-native';
+import axios from 'axios';
 
 export default class CreateAccount extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            firstName: 'TEST',
+            lastName: 'test', 
             email: '',
             password: '',
+
         };
     }
-    onLogin() {
+    onCreate() {
         const { email, password } = this.state;
-        Alert.alert('Credentials', `${email} : ${password}`);
+        // Alert.alert('Credentials', `${email} : ${password}`);
+        axios.post('http://localhost:4000/register', this.state)
+        .then(response => {
+            console.log('RESPONSE: ')
+            console.log(response);
+            navigate('Login');
+        })
+        .catch(error => {
+            console.log(error);
+        })
+        Keyboard.dismiss();
     }
     render() {
         const {navigate} = this.props.navigation;
@@ -38,7 +52,7 @@ export default class CreateAccount extends React.Component {
                     <TouchableOpacity
                         title={'Login'}
                         style={styles.loginButton}
-                        onPress={() => navigate('Wall')/*this.onLogin.bind(this)*/}
+                        onPress={this.onCreate.bind(this)}
                         underlayColor='#fff'
                     >
                     <Text style={styles.loginText}>Create</Text>

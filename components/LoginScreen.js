@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
+import axios from 'axios';
+import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
  
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
@@ -14,12 +15,26 @@ export default class LoginScreen extends React.Component {
         };
     }
     onLogin() {
+       
         const { email, password } = this.state;
-        Alert.alert('Credentials', `${email} : ${password}`);
+        const {navigate} = this.props.navigation;
+        // Alert.alert('Credentials', `${email} : ${password}`);
+        axios.post('http://localhost:4000/login', this.state)
+        .then(response => {
+            console.log('RESPONSE: ')
+            console.log(response);
+            navigate('Bottom');
+        })
+        .catch(error => {
+            console.log(error);
+        })
+        Keyboard.dismiss();
+        
     }
     render() {
         const {navigate} = this.props.navigation;
         return (
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <ImageBackground source={require('../assets/bg.png')} style={ styles.container }>
                 <View style={styles.form}>
                     <StatusBar
@@ -41,7 +56,7 @@ export default class LoginScreen extends React.Component {
                     <TouchableOpacity
                         title={'Login'}
                         style={styles.loginButton}
-                        onPress={() => navigate('Bottom')/*this.onLogin.bind(this)*/}
+                        onPress={this.onLogin.bind(this)}
                         underlayColor='#fff'
                     >
                     <Text style={styles.loginText}>Login</Text>
@@ -56,6 +71,7 @@ export default class LoginScreen extends React.Component {
                     </TouchableOpacity> 
                 </View>
             </ImageBackground>
+            </TouchableWithoutFeedback>
         );
     }
 }
