@@ -35,40 +35,40 @@ export default class LoginScreen extends React.Component {
         const {navigate} = this.props.navigation;
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <ImageBackground source={require('../assets/bg.png')} style={ styles.container }>
-                <View style={styles.form}>
-                    <StatusBar
-                        barStyle='light-content'
-                    />
-                    <TextInput
-                        value={this.state.email}
-                        onChangeText={(email) => this.setState({ email })}
-                        placeholder={'Email'}
-                        style={styles.input}
-                    />
-                    <TextInput
-                        value={this.state.password}
-                        onChangeText={(password) => this.setState({ password })}
-                        placeholder={'Password'}
-                        secureTextEntry={true}
-                        style={styles.input}
-                    />
-                    <TouchableOpacity
-                        title={'Login'}
-                        style={styles.loginButton}
-                        onPress={this.onLogin.bind(this)}
-                        underlayColor='#fff'
-                    >
-                    <Text style={styles.loginText}>Login</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        title={'Login'}
-                        style={styles.create}
-                        onPress={() => navigate('Create')/*this.onLogin.bind(this)*/}
-                        underlayColor='#fff'
-                    >
-                    <Text style={styles.createText}>Créer un compte</Text>
-                    </TouchableOpacity> 
+                <ImageBackground source={require('../assets/bg.png')} style={ styles.container }>
+                    <View style={styles.form}>
+                        <StatusBar
+                            barStyle='light-content'
+                        />
+                        <TextInput
+                            value={this.state.email}
+                            onChangeText={(email) => this.setState({ email })}
+                            placeholder={'Email'}
+                            style={styles.input}
+                        />
+                        <TextInput
+                            value={this.state.password}
+                            onChangeText={(password) => this.setState({ password })}
+                            placeholder={'Password'}
+                            secureTextEntry={true}
+                            style={styles.input}
+                        />
+                        <TouchableOpacity
+                            title={'Login'}
+                            style={styles.loginButton}
+                            onPress={this.onLogin.bind(this)}
+                            underlayColor='#fff'
+                        >
+                        <Text style={styles.loginText}>Login</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            title={'Login'}
+                            style={styles.create}
+                            onPress={() => navigate('Create')/*this.onLogin.bind(this)*/}
+                            underlayColor='#fff'
+                        >
+                        <Text style={styles.createText}>Créer un compte</Text>
+                        </TouchableOpacity> 
                 </View>
             </ImageBackground>
             </TouchableWithoutFeedback>
