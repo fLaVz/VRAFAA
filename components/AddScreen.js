@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard} from 'react-native';
-import { ImagePicker } from 'expo';
+import { Alert, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard} from 'react-native';
+import { ImagePicker, Location, Permissions } from 'expo';
 
 export default class AddScreen extends React.Component {
 
@@ -11,7 +11,8 @@ export default class AddScreen extends React.Component {
             name: '',
             file: '',
             video: null,
-            maxLength: 120000
+            maxLength: 120000,
+            location: null
         }
     }
     static navigationOptions = {
@@ -19,7 +20,7 @@ export default class AddScreen extends React.Component {
     };
     _pickImage = async () => {
         Keyboard.dismiss()
-        let permission = await Expo.Permissions.askAsync(Expo.Permissions.CAMERA_ROLL);
+        let permission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         if (permission.status === 'granted') {
             let result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
@@ -27,19 +28,32 @@ export default class AddScreen extends React.Component {
                 mediaTypes: 'Videos'
             });              
             console.log(result);
-            console.log('Artisans name: ' + this.state.name)
+            console.log('Artisan: ' + this.state.name)
             if(result.duration < this.state.maxLength && !result.cancelled) {
                 this.setState({ image: result });
             }
             else {
-                alert('Veuillez selectionner une vidéo de 2 minutes maximum');
+                Alert.alert('Erreur', 'Veuillez selectionner une vidéo de 2 minutes maximum');
             }
         }
     };
+
+    _getLocationAsync = async () => {
+        const {navigate} = this.props.navigation;
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+          this.setState({
+            errorMessage: 'Permission to access location was denied',
+          });
+        }
+    
+        let location = await Location.getCurrentPositionAsync({});
+        console.log(location);
+        this.setState({ location });
+        navigate('Wall');
+      };
     
     render() {
-        const {navigate} = this.props.navigation;
-        let { image } = this.state;
         return(
             <View style={styles.container}>
                 <View style={styles.form}>
@@ -60,7 +74,7 @@ export default class AddScreen extends React.Component {
                     <TouchableOpacity
                     title={'Add'}
                         style={styles.artisanButton}
-                        onPress={() => navigate('Wall')}
+                        onPress={this._getLocationAsync}
                         underlayColor='#fff'
                     >
                     <Text style={styles.artisanText}>Ajouter un Artisan</Text>

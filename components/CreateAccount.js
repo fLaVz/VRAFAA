@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, StatusBar, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { Alert, StyleSheet, Text, View, TextInput, StatusBar, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import axios from 'axios';
 
 export default class CreateAccount extends React.Component {
@@ -15,17 +15,15 @@ export default class CreateAccount extends React.Component {
         };
     }
     onCreate() {
-        const { email, password } = this.state;
-        // Alert.alert('Credentials', `${email} : ${password}`);
-        axios.post('http://localhost:4000/register', this.state)
-        .then(response => {
-            console.log('RESPONSE: ')
-            console.log(response);
-            navigate('Login');
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        const {navigate} = this.props.navigation;
+        axios.post('http://l192.168.1.99:4000/register', this.state)
+        .then(response => { 
+            console.log(response.data.success)
+            if(response.data.success) {
+                navigate('Login');
+                Alert.alert('Bien ouej' ,'Veuillez vous identifier');
+            }
+        });
         Keyboard.dismiss();
     }
     render() {

@@ -1,7 +1,7 @@
 import React from 'react';
-import axios from 'axios';
 import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
- 
+import axios from 'axios' 
+
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
         header: null,
@@ -12,24 +12,22 @@ export default class LoginScreen extends React.Component {
         this.state = {
             email: '',
             password: '',
+            token: null,
         };
     }
     onLogin() {
        
-        const { email, password } = this.state;
         const {navigate} = this.props.navigation;
-        // Alert.alert('Credentials', `${email} : ${password}`);
-        axios.post('http://localhost:4000/login', this.state)
-        .then(response => {
-            console.log('RESPONSE: ')
-            console.log(response);
-            navigate('Bottom');
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        axios.post('http://192.168.1.99:4000/login', this.state)
+        .then(response => { 
+            console.log(response.data)
+            if(response.data.token) {
+                this.state.token = response.data.token;
+                console.log(this.state);
+                navigate('Wall');
+            }
+        });
         Keyboard.dismiss();
-        
     }
     render() {
         const {navigate} = this.props.navigation;

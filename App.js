@@ -12,7 +12,7 @@ const RootStack = createStackNavigator(
         Create: {
             screen: CreateAccountScreen,
             navigationOptions: {
-                headerTitle: 'CreateAccount',
+                headerTitle: 'Créer un compte',
                 headerBackTitle: 'Login',
             }
         },
@@ -20,13 +20,9 @@ const RootStack = createStackNavigator(
             screen: BottomNavigator,
             navigationOptions: ({navigation}) => ({
                 title: 'Artisans',
-                // headerLeft: null  // disabled for tests
+                headerLeft: null  // disabled for tests
             })
         },
-        Wall: {
-            screen: WallScreen,
-            headertitle: 'TEST'
-        }
     },
     { 
         initialRouteName: 'Login',
