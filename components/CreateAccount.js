@@ -16,12 +16,12 @@ export default class CreateAccount extends React.Component {
     }
     onCreate() {
         const {navigate} = this.props.navigation;
-        axios.post('http://l192.168.1.99:4000/register', this.state)
+        axios.post('http://192.168.1.99:4000/register', this.state)
         .then(response => { 
             console.log(response.data.success)
             if(response.data.success) {
                 navigate('Login');
-                Alert.alert('Bien ouej' ,'Veuillez vous identifier');
+                Alert.alert('Compte Crée' ,'Veuillez vous identifier');
             }
         });
         Keyboard.dismiss();

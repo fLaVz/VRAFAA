@@ -27,16 +27,16 @@ export default class WallScreen extends React.Component {
     }
     render() {
         return (
-                <FlatList style={styles.container}
-                    data={this.state.users}
-                    renderItem={({item}) =>
+            <FlatList style={styles.container}
+                data={this.state.users}
+                renderItem={({item}) =>
                     <View style={styles.list}> 
                         <Text style={styles.text}>{item.name}</Text>
                         <Text style={styles.text}>{item.email}</Text>
                     </View>
-                    }
-                    keyExtractor={item => item.email}
-                />
+                }
+                keyExtractor={item => item.email}
+            />
         );
     }
 }

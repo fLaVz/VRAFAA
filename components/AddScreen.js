@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard} from 'react-native';
 import { ImagePicker, Location, Permissions } from 'expo';
+import axios from 'axios';
 
 export default class AddScreen extends React.Component {
 
@@ -9,17 +10,15 @@ export default class AddScreen extends React.Component {
         
         this.state = {
             name: '',
-            file: '',
             video: null,
             maxLength: 120000,
-            location: null
+            location: null,
+            region: null
+            
         }
     }
-    static navigationOptions = {
-        title: 'Ajouter',
-    };
+
     _pickImage = async () => {
-        Keyboard.dismiss()
         let permission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         if (permission.status === 'granted') {
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -27,32 +26,51 @@ export default class AddScreen extends React.Component {
                 aspect: [4, 3],
                 mediaTypes: 'Videos'
             });              
-            console.log(result);
-            console.log('Artisan: ' + this.state.name)
             if(result.duration < this.state.maxLength && !result.cancelled) {
-                this.setState({ image: result });
+                this.setState({ video: result });
             }
             else {
-                Alert.alert('Erreur', 'Veuillez selectionner une vidéo de 2 minutes maximum');
+                Alert.alert('Oops!', 'Veuillez selectionner une vidéo de 2 minutes maximum');
             }
         }
     };
 
     _getLocationAsync = async () => {
-        const {navigate} = this.props.navigation;
+        if(!this.video) {
+            Alert.alert('Oops!', 'Veuillez poster au moins une vidéo');
+            return;
+        }
+    
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
           this.setState({
             errorMessage: 'Permission to access location was denied',
           });
+        }else {
+            let location = await Location.getCurrentPositionAsync({});
+            this.setState({ location });
+            this._getRegion();
         }
-    
-        let location = await Location.getCurrentPositionAsync({});
-        console.log(location);
-        this.setState({ location });
-        navigate('Wall');
-      };
-    
+    };
+
+    _getRegion = async () => {
+        const {navigate} = this.props.navigation;
+        axios.get(
+            'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + this.state.location.coords.latitude + 
+            '&lon=' + this.state.location.coords.longitude + 
+            '&zoom=5'
+        )
+        .then(response => { 
+            if(response.data.address.state) {
+                this.setState({region: response.data.address.state});
+                console.log('LOGSTATE: ' + this.state.region);
+                navigate('Wall');
+                Alert.alert('Super!', 'Artisan ajouté')
+            }
+        });
+        Keyboard.dismiss()
+    };
+
     render() {
         return(
             <View style={styles.container}>

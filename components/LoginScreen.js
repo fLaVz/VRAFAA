@@ -16,7 +16,6 @@ export default class LoginScreen extends React.Component {
         };
     }
     onLogin() {
-       
         const {navigate} = this.props.navigation;
         axios.post('http://192.168.1.99:4000/login', this.state)
         .then(response => { 
@@ -67,8 +66,8 @@ export default class LoginScreen extends React.Component {
                         >
                         <Text style={styles.createText}>Créer un compte</Text>
                         </TouchableOpacity> 
-                </View>
-            </ImageBackground>
+                    </View>
+                </ImageBackground>
             </TouchableWithoutFeedback>
         );
     }
