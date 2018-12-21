@@ -20,7 +20,7 @@ const RootStack = createStackNavigator(
             screen: BottomNavigator,
             navigationOptions: ({navigation}) => ({
                 title: 'Artisans',
-                headerLeft: null  // disabled for tests
+                //headerLeft: null  // disabled for tests
             })
         },
     },
@@ -48,6 +48,9 @@ const AppContainer = createAppContainer(RootStack);
 // Returns default entry point view which is Login
 export default class App extends React.Component {
     render() {
+        // For default values purposes only
+        console.disableYellowBox = true;
+        
         return <AppContainer />;
     }
 }

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard} from 'react-native';
+import { Alert, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { ImagePicker, Location, Permissions } from 'expo';
 import axios from 'axios';
+import { createArtisan } from './config/api';
 
 export default class AddScreen extends React.Component {
 
@@ -19,12 +20,14 @@ export default class AddScreen extends React.Component {
     }
 
     _pickImage = async () => {
+        Keyboard.dismiss();
         let permission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         if (permission.status === 'granted') {
             let result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
-                mediaTypes: 'Videos'
+                mediaTypes: 'Videos',
+                base64: false
             });              
             if(result.duration < this.state.maxLength && !result.cancelled) {
                 this.setState({ video: result });
@@ -33,10 +36,11 @@ export default class AddScreen extends React.Component {
                 Alert.alert('Oops!', 'Veuillez selectionner une vidéo de 2 minutes maximum');
             }
         }
+        console.log(this.state)
     };
 
     _getLocationAsync = async () => {
-        if(!this.video) {
+        if(this.state.video == null) {
             Alert.alert('Oops!', 'Veuillez poster au moins une vidéo');
             return;
         }
@@ -54,7 +58,6 @@ export default class AddScreen extends React.Component {
     };
 
     _getRegion = async () => {
-        const {navigate} = this.props.navigation;
         axios.get(
             'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + this.state.location.coords.latitude + 
             '&lon=' + this.state.location.coords.longitude + 
@@ -64,41 +67,80 @@ export default class AddScreen extends React.Component {
             if(response.data.address.state) {
                 this.setState({region: response.data.address.state});
                 console.log('LOGSTATE: ' + this.state.region);
-                navigate('Wall');
-                Alert.alert('Super!', 'Artisan ajouté')
+                this._createArtisan();
             }
         });
-        Keyboard.dismiss()
+    };
+
+    _retrieveData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('token');
+          if (value !== null) {
+            // We have data!!
+            console.log(value);
+          }
+         } catch (error) {
+           // Error retrieving data
+         }
+      }
+
+    _createArtisan = async () => {
+        const {navigate} = this.props.navigation;
+        const formData = new FormData();
+        const headers = {'Content-Type': 'multipart/form-data'};
+
+        formData.append('name', this.state.name);
+        formData.append('region', this.state.region);
+        formData.append('video', {
+            uri: this.state.video.uri,
+            name: 'artisanvideo'
+        });
+        console.log(formData);
+        
+        // TODO : ?token=dojzbfzfeboz
+        try {
+            createArtisan(formData, headers)
+            .then(response => { 
+                console.log(response.data)
+                navigate('Wall');
+                Alert.alert('Super!', 'Artisan ajouté')
+            })
+        }catch(e) {
+            console.log(e);
+        }
+        
     };
 
     render() {
         return(
-            <View style={styles.container}>
-                <View style={styles.form}>
-                    <TextInput
-                        value={this.state.name}
-                        onChangeText={(name) => this.setState({ name })}
-                        placeholder={'Nom de l\'artisan'}
-                        style={styles.input}
-                    />
-                    <TouchableOpacity
-                        title={'Video'}
-                        style={styles.videoButton}
-                        onPress={this._pickImage}
-                        underlayColor='#fff'
-                    >
-                    <Text style={styles.artisanText}>Choisir Vidéo</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                    title={'Add'}
-                        style={styles.artisanButton}
-                        onPress={this._getLocationAsync}
-                        underlayColor='#fff'
-                    >
-                    <Text style={styles.artisanText}>Ajouter un Artisan</Text>
-                    </TouchableOpacity>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style={styles.container}>
+                    <View style={styles.form}>
+                        <TextInput
+                            value={this.state.name}
+                            onChangeText={(name) => this.setState({ name })}
+                            placeholder={'Nom de l\'artisan'}
+                            style={styles.input}
+                        />
+                        <TouchableOpacity
+                            title={'Video'}
+                            style={styles.videoButton}
+                            onPress={this._pickImage}
+                            underlayColor='#fff'
+                        >
+                        <Text style={styles.artisanText}>Choisir Vidéo</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                        title={'Add'}
+                            style={styles.artisanButton}
+                            onPress={this._getLocationAsync}
+                            underlayColor='#fff'
+                        >
+                        <Text style={styles.artisanText}>Ajouter un Artisan</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         );
     }
 }

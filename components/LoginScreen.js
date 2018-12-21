@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, TextInput, ImageBackground, StatusBar, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import axios from 'axios' 
+import { StyleSheet, Text, View, AsyncStorage, TextInput, ImageBackground, StatusBar, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { login } from './config/api';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
@@ -17,22 +17,36 @@ export default class LoginScreen extends React.Component {
     }
     onLogin() {
         const {navigate} = this.props.navigation;
-        axios.post('http://192.168.1.99:4000/login', this.state)
+
+        login(this.state)
         .then(response => { 
-            console.log(response.data)
+            console.log(response)
             if(response.data.token) {
-                this.state.token = response.data.token;
-                console.log(this.state);
+                data = {
+                    key: "token",
+                    value: response.data.token
+                };
+                this._storeData(data);
                 navigate('Wall');
             }
         });
         Keyboard.dismiss();
     }
+
+    _storeData = async data => {
+        try {
+            await AsyncStorage.setItem(data.key, data.value);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     render() {
         const {navigate} = this.props.navigation;
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <ImageBackground source={require('../assets/bg.png')} style={ styles.container }>
+                <ImageBackground source={require('../assets/bgVra.png')} style={ styles.container }>
                     <View style={styles.form}>
                         <StatusBar
                             barStyle='light-content'
@@ -40,13 +54,14 @@ export default class LoginScreen extends React.Component {
                         <TextInput
                             value={this.state.email}
                             onChangeText={(email) => this.setState({ email })}
+                            keyboardType={'email-address'}
                             placeholder={'Email'}
                             style={styles.input}
                         />
                         <TextInput
                             value={this.state.password}
                             onChangeText={(password) => this.setState({ password })}
-                            placeholder={'Password'}
+                            placeholder={'Mot de passe'}
                             secureTextEntry={true}
                             style={styles.input}
                         />
@@ -66,6 +81,15 @@ export default class LoginScreen extends React.Component {
                         >
                         <Text style={styles.createText}>Créer un compte</Text>
                         </TouchableOpacity> 
+                        <Text style={styles.createText}>Ou</Text>
+                        <TouchableOpacity
+                            title={'Go'}
+                            style={styles.create}
+                            onPress={() => navigate('Wall')/*this.onLogin.bind(this)*/}
+                            underlayColor='#fff'
+                        >
+                        <Text style={styles.createText}>Consultez la liste des artisans</Text>
+                        </TouchableOpacity>
                     </View>
                 </ImageBackground>
             </TouchableWithoutFeedback>
@@ -110,9 +134,10 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     create: {
-        marginTop: 40,
+        marginTop: 0,
     },
     createText: {
+        marginTop: 20,
         color: '#fff'
     }
 });

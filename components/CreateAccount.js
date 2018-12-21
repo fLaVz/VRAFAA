@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert, StyleSheet, Text, View, TextInput, StatusBar, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import axios from 'axios';
+import { createAccount } from './config/api';
 
 export default class CreateAccount extends React.Component {
 
@@ -16,7 +17,7 @@ export default class CreateAccount extends React.Component {
     }
     onCreate() {
         const {navigate} = this.props.navigation;
-        axios.post('http://192.168.1.99:4000/register', this.state)
+        createAccount(this.state)
         .then(response => { 
             console.log(response.data.success)
             if(response.data.success) {
