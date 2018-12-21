@@ -20,7 +20,7 @@ const RootStack = createStackNavigator(
             screen: BottomNavigator,
             navigationOptions: ({navigation}) => ({
                 title: 'Artisans',
-                //headerLeft: null  // disabled for tests
+                headerLeft: null  // disabled for tests
             })
         },
     },
@@ -50,7 +50,7 @@ export default class App extends React.Component {
     render() {
         // For default values purposes only
         console.disableYellowBox = true;
-        
+
         return <AppContainer />;
     }
 }

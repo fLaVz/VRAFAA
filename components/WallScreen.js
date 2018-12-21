@@ -1,36 +1,49 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
 import { getArtisans } from './config/api';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default class WallScreen extends React.Component {
 
+    static navigationOptions = {
+        headerBackTitle: 'test'
+    }
     constructor(props) {
         super(props)
 
+        this._onLike = this._onLike.bind(this),
         // Sample, data comes from API request
         this.state = {
-            artisan: [
-                {
-                    id: '012345',
-                    name: 'OOPs, il semble qu\'aucun artisan ne soit présent dans votre région!',
-                    region: ''
-                }
-            ],
-            refreshing: false
+            refreshing: false,
+            iconColor: {'empty':'ept'},
         }
     }
 
-    componentWillMount() {
-        this._getArtisans();
+    componentWillMount = async () => {
+        await this._getArtisans();
+        this.state.artisan.forEach((item) => {
+            console.log('id: ' + item._id)
+            let obj = {
+                id: item._id,
+                color: '#fff'
+            }
+            this.setState({
+                iconColor: {
+                   ...this.state.iconColor,
+                   [item._id]: '#fff'
+                }
+              });
+        })
+        console.log(this.state.iconColor);
     }
+
 
     _getArtisans = async () => {
 
         await getArtisans()
         .then(response => { 
             artisan = response.data;    
-            this.setState({artisan});
-            console.log(this.state);
+            this.setState({artisan})
         });
     }
 
@@ -44,6 +57,16 @@ export default class WallScreen extends React.Component {
         });
     }
 
+    _onLike = (id) => {
+        if(this.state.iconColor[id] == '#fff') {
+            this.state.iconColor[id] = '#ff0059'
+        }else {
+            this.state.iconColor[id] = '#fff'
+        }
+        
+        this._onRefresh();
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -55,6 +78,14 @@ export default class WallScreen extends React.Component {
                         <View style={styles.listItem}> 
                             <Text style={styles.text}>{item.name}</Text>
                             <Text style={styles.text}>{item.region}</Text>
+                            <TouchableOpacity
+                            title={'Login'}
+                            style={styles.loginButton}
+                            onPress={() => this._onLike(item._id)}
+                            underlayColor='#fff'
+                            >
+                                <Ionicons name='ios-heart' size={20} color={this.state.iconColor[item._id]}/>
+                            </TouchableOpacity>
                         </View>
                     }
                     refreshControl={

@@ -20,7 +20,7 @@ export default class LoginScreen extends React.Component {
 
         login(this.state)
         .then(response => { 
-            console.log(response)
+            console.log(response.data)
             if(response.data.token) {
                 data = {
                     key: "token",
