@@ -12,9 +12,9 @@ export default class CreateAccount extends React.Component {
             lastName: 'test', 
             email: 'test@test.fr',
             password: 'test',
-
         };
     }
+    
     onCreate() {
         const {navigate} = this.props.navigation;
         createAccount(this.state)

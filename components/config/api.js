@@ -4,7 +4,6 @@ import { AsyncStorage } from 'react-native';
 const baseUri = 'http://192.168.1.99:4000';
 
 const login = async (data) => {
-
     return axios.post(baseUri + '/login', data)
 }
 
@@ -25,14 +24,20 @@ const createArtisan = async (data, headers) => {
 }
 
 const getArtisans = async () => {
-
     return axios.get(baseUri + '/artisans')
-    
-} 
+}
+
+const vote = async (data) => {
+    obj = {
+        artisan: data
+    }
+    return axios.post(baseUri + '/artisans/vote', obj);
+}
 
 export {
     login,
     createAccount,
     createArtisan,
-    getArtisans
+    getArtisans,
+    vote
 }

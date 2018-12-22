@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
-import { getArtisans } from './config/api';
+import { getArtisans, vote } from './config/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default class WallScreen extends React.Component {
@@ -12,75 +12,77 @@ export default class WallScreen extends React.Component {
         super(props)
 
         this._onLike = this._onLike.bind(this),
-        // Sample, data comes from API request
+
         this.state = {
             refreshing: false,
-            iconColor: {'empty':'ept'},
+            iconColor: {},
         }
     }
 
     componentWillMount = async () => {
         await this._getArtisans();
+        this._updateLikes();
+    }
+
+    _updateLikes = async () => {
         this.state.artisan.forEach((item) => {
-            console.log('id: ' + item._id)
-            let obj = {
-                id: item._id,
-                color: '#fff'
-            }
             this.setState({
                 iconColor: {
                    ...this.state.iconColor,
                    [item._id]: '#fff'
                 }
-              });
+            });
         })
-        console.log(this.state.iconColor);
     }
 
 
     _getArtisans = async () => {
-
         await getArtisans()
         .then(response => { 
             artisan = response.data;    
             this.setState({artisan})
         });
+        console.log(this.state.artisan);
     }
 
-    _onRefresh = () => {
+    _onRefresh = async () => {
         this.setState({refreshing: true});
         getArtisans()
         .then((response) => {
             artisan = response.data;
             this.setState({artisan});
-            this.setState({refreshing: false});
         });
+        this.setState({refreshing: false});
     }
 
     _onLike = (id) => {
-        if(this.state.iconColor[id] == '#fff') {
-            this.state.iconColor[id] = '#ff0059'
-        }else {
+        if(this.state.iconColor[id] == '#ff0059') {
             this.state.iconColor[id] = '#fff'
+        }else {
+            this.state.iconColor[id] = '#ff0059'
+            vote(id)
+            .then((response) => {
+                console.log(response.data)
+            })
         }
-        
         this._onRefresh();
     }
 
     render() {
         return (
             <View style={styles.container}>
-                {/* <Text>{ getRegionByLocation }</Text> */}
                 <FlatList
                     style={styles.list}
                     data={this.state.artisan}
                     renderItem={({item}) =>
-                        <View style={styles.listItem}> 
-                            <Text style={styles.text}>{item.name}</Text>
-                            <Text style={styles.text}>{item.region}</Text>
+                        <View style={styles.listItem}>
+                            <Text style={styles.textlight}>Crée par: {item.creator.lastName}, le {item.createdAt}</Text>
+                            <Text style={styles.artisan}>{item.name}&nbsp;
+                                <Text style={styles.textlight}>@{item.region}</Text>
+                            </Text>
                             <TouchableOpacity
-                            title={'Login'}
-                            style={styles.loginButton}
+                            title={'Heart'}
+                            style={styles.like}
                             onPress={() => this._onLike(item._id)}
                             underlayColor='#fff'
                             >
@@ -113,14 +115,26 @@ const styles = StyleSheet.create({
     },
     listItem: {
         fontWeight: 'bold',
-        alignItems: 'center',
         borderBottomWidth: 0.3,
         borderColor: '#3a444c',
-        padding: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 30,
+        paddingRight: 30, 
         backgroundColor: '#182330',
     },
     text: {
         color: 'white'
+    },
+    textlight: {
+        color: '#a8a8a8',
+        fontWeight: 'normal'
+    },
+    artisan: {
+        color: 'white',
+        fontWeight: 'bold',
+    },  
+    like: {
+        paddingTop: 20,
     }
-
 });

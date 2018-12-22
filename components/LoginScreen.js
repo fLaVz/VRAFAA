@@ -12,7 +12,6 @@ export default class LoginScreen extends React.Component {
         this.state = {
             email: '',
             password: '',
-            token: null,
         };
     }
     onLogin() {
