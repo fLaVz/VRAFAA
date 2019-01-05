@@ -117,7 +117,6 @@ export default class AddScreen extends React.Component {
         });
         console.log(formData);
         
-        // TODO : ?token=dojzbfzfeboz
         try {
             createArtisan(formData, headers)
             .then(response => { 

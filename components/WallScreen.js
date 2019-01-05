@@ -19,10 +19,12 @@ export default class WallScreen extends React.Component {
         }
     }
 
+    
     componentWillMount = async () => {
         await this._getArtisans();
         this._updateLikes();
     }
+
 
     _updateLikes = async () => {
         this.state.artisan.forEach((item) => {
@@ -51,8 +53,6 @@ export default class WallScreen extends React.Component {
         .then((response) => {
             artisan = response.data;
             this.setState({artisan});
-        }, (error) => {
-            console.log(error);
         });
         this.setState({refreshing: false});
     }
@@ -64,14 +64,12 @@ export default class WallScreen extends React.Component {
             this.state.iconColor[idItem] = '#ff0059'
             await this._retrieveData('token');
             await this._retrieveData('id');
-            vote(idItem, this.state.deviceId, this.state.uniqueId)
+            vote(idItem, this.state.deviceId, this.state.token)
             .then((response) => {
                 console.log(response.data)
-            }, (error) => {
-                console.log(error)
             })
         }
-        this._onRefresh();
+        
     }
 
     _retrieveData = async (key) => {
