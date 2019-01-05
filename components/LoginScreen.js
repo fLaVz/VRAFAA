@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, AsyncStorage, TextInput, ImageBackground, StatusBar, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { login } from './config/api';
+import { Constants } from 'expo';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
@@ -16,16 +17,20 @@ export default class LoginScreen extends React.Component {
     }
     onLogin() {
         const {navigate} = this.props.navigation;
-
         login(this.state)
         .then(response => { 
             console.log(response.data)
             if(response.data.token) {
-                data = {
-                    key: "token",
+                dataToken = {
+                    key: 'token',
                     value: response.data.token
                 };
-                this._storeData(data);
+                dataId = {
+                    key: 'id',
+                    value: Constants.deviceId
+                };
+                this._storeData(dataToken);
+                this._storeData(dataId);
                 navigate('Wall');
             }
         });

@@ -19,10 +19,10 @@ export default class CreateAccount extends React.Component {
         const {navigate} = this.props.navigation;
         createAccount(this.state)
         .then(response => { 
-            console.log(response.data.success)
-            if(response.data.success) {
+            console.log(response.data)
+            if(response.data.token) {
+                Alert.alert('Compte Créé' ,'Veuillez vous identifier');
                 navigate('Login');
-                Alert.alert('Compte Crée' ,'Veuillez vous identifier');
             }
         });
         Keyboard.dismiss();

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, RefreshControl, TouchableOpacity, AsyncStorage } from 'react-native';
 import { getArtisans, vote } from './config/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -55,17 +55,34 @@ export default class WallScreen extends React.Component {
         this.setState({refreshing: false});
     }
 
-    _onLike = (id) => {
-        if(this.state.iconColor[id] == '#ff0059') {
-            this.state.iconColor[id] = '#fff'
+    _onLike = async (idItem) => {
+        if(this.state.iconColor[idItem] == '#ff0059') {
+            this.state.iconColor[idItem] = '#fff'
         }else {
-            this.state.iconColor[id] = '#ff0059'
-            vote(id)
+            this.state.iconColor[idItem] = '#ff0059'
+            await this._retrieveData('token');
+            await this._retrieveData('id');
+            vote(idItem, this.state.deviceId, this.state.uniqueId)
             .then((response) => {
                 console.log(response.data)
             })
         }
         this._onRefresh();
+    }
+
+    _retrieveData = async (key) => {
+        try {
+            const data = await AsyncStorage.getItem(key);
+            if(key == 'token' & data !== null) {
+                this.setState({token: data})
+                console.log(this.state.token)
+            }else if(key == 'id' & data !== null) {
+                this.setState({deviceId: data})
+                console.log(this.state.deviceId)
+            }
+        } catch (error) {
+                console.log(error)
+        }
     }
 
     render() {

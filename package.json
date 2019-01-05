@@ -9,17 +9,20 @@
   "dependencies": {
     "axios": "^0.18.0",
     "expo": "^31.0.2",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
+    "react": "^16.7.0",
+    "react-native": "^0.57.8",
     "react-native-camera-roll-picker": "^1.2.3",
     "react-native-customized-image-picker": "^0.1.4",
+    "react-native-device-info": "^0.24.3",
     "react-native-image-picker": "^0.27.2",
     "react-native-permissions": "^1.1.1",
+    "react-native-reanimated": "^1.0.0-alpha.10",
     "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^3.0.4"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "babel-preset-expo": "^5.0.0",
+    "schedule": "^0.4.0"
   },
   "private": true
 }

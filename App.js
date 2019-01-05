@@ -1,9 +1,12 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import { StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
 import LoginScreen from './components/LoginScreen';
 import WallScreen from './components/WallScreen';
 import CreateAccountScreen from './components/CreateAccount';
-import BottomNavigator from './components/BottomNavigator'
+import BottomNavigator from './components/BottomNavigator';
+import { logout } from './components/config/api';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // Creates navigation
 const RootStack = createStackNavigator(
@@ -20,7 +23,15 @@ const RootStack = createStackNavigator(
             screen: BottomNavigator,
             navigationOptions: ({navigation}) => ({
                 title: 'Artisans',
-                headerLeft: null  // disabled for tests
+                headerLeft: null,  // disabled for tests
+                headerRight:    <TouchableOpacity
+                                    title={'Logout'}
+                                    style={styles.logout}
+                                    onPress={() => this._logout(navigation)}
+                                    underlayColor='#fff'
+                                >
+                                    <Ionicons name='ios-log-out' size={25} color='#fff'/>
+                                </TouchableOpacity>
             })
         },
     },
@@ -43,14 +54,25 @@ const RootStack = createStackNavigator(
     },
 );
 
-const AppContainer = createAppContainer(RootStack);
+_logout = async (navigation) => {
+    const {navigate} = navigation;
+    AsyncStorage.clear();
+    navigate('Login');
+}
 
+
+const AppContainer = createAppContainer(RootStack);
 // Returns default entry point view which is Login
 export default class App extends React.Component {
     render() {
         // For default values purposes only
         console.disableYellowBox = true;
-
         return <AppContainer />;
     }
 }
+
+const styles = StyleSheet.create({
+    logout: {
+        marginRight: 20,
+    }
+});

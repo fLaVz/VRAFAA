@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { Alert, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback, AsyncStorage} from 'react-native';
 import { ImagePicker, Location, Permissions } from 'expo';
 import axios from 'axios';
 import { createArtisan } from './config/api';
@@ -14,29 +14,50 @@ export default class AddScreen extends React.Component {
             video: null,
             maxLength: 120000,
             location: null,
-            region: null
+            region: null,
+            token: null
             
         }
     }
 
     _pickImage = async () => {
-        Keyboard.dismiss();
-        let permission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        if (permission.status === 'granted') {
-            let result = await ImagePicker.launchImageLibraryAsync({
-                allowsEditing: true,
-                aspect: [4, 3],
-                mediaTypes: 'Videos',
-                base64: false
-            });              
-            if(result.duration < this.state.maxLength && !result.cancelled) {
-                this.setState({ video: result });
+
+        await this._retrieveData();
+        console.log(this.state.token)
+
+        if(this.state.token != null) {
+            Keyboard.dismiss();
+            let permission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+            if (permission.status === 'granted') {
+                let result = await ImagePicker.launchImageLibraryAsync({
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    mediaTypes: 'Videos',
+                    base64: false
+                });              
+                if(result.duration < this.state.maxLength && !result.cancelled) {
+                    this.setState({ video: result });
+                }
+                else {
+                    Alert.alert('Oops!', 'Veuillez selectionner une vidéo de 2 minutes maximum');
+                }
             }
-            else {
-                Alert.alert('Oops!', 'Veuillez selectionner une vidéo de 2 minutes maximum');
-            }
+            console.log(this.state)
+        }else {
+            const {navigate} = this.props.navigation;
+            Alert.alert(
+                'Oops!',
+                'Vous devez être connecté pour pouvoir ajouter un artisan',
+                [
+                  {text: 'Se Connecter', onPress: () => navigate('Login')},
+                  {text: 'Créer un compte', onPress: () => navigate('Create')},
+                  {text: 'OK', onPress: () => console.log('OK Pressed')},
+                ],
+                { cancelable: false }
+              )
         }
-        console.log(this.state)
+        
+            
     };
 
     _getLocationAsync = async () => {
@@ -74,15 +95,14 @@ export default class AddScreen extends React.Component {
 
     _retrieveData = async () => {
         try {
-          const value = await AsyncStorage.getItem('token');
-          if (value !== null) {
-            // We have data!!
-            console.log(value);
-          }
-         } catch (error) {
-           // Error retrieving data
-         }
-      }
+            const data = await AsyncStorage.getItem('token');
+            if (data !== null) {
+                this.setState({token: data})
+            }
+        } catch (error) {
+                console.log(error)
+        }
+    }
 
     _createArtisan = async () => {
         const {navigate} = this.props.navigation;

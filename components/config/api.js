@@ -27,9 +27,10 @@ const getArtisans = async () => {
     return axios.get(baseUri + '/artisans')
 }
 
-const vote = async (data) => {
+const vote = async (data, id, token) => {
     obj = {
-        artisan: data
+        artisan: data,
+        uniqueId: id,
     }
     return axios.post(baseUri + '/artisans/vote', obj);
 }
