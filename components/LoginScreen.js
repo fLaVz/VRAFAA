@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, AsyncStorage, TextInput, ImageBackground, StatusBar, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, AsyncStorage, TextInput, ImageBackground, StatusBar, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import { login } from './config/api';
 import { Constants } from 'expo';
 
@@ -16,6 +16,7 @@ export default class LoginScreen extends React.Component {
         };
     }
     onLogin() {
+        Keyboard.dismiss();
         const {navigate} = this.props.navigation;
         login(this.state)
         .then(response => { 
@@ -25,16 +26,28 @@ export default class LoginScreen extends React.Component {
                     key: 'token',
                     value: response.data.token
                 };
-                dataId = {
-                    key: 'id',
-                    value: Constants.deviceId
-                };
+                this._setUniqueId()
                 this._storeData(dataToken);
-                this._storeData(dataId);
                 navigate('Wall');
             }
+        }, (error) => {
+            Alert.alert('Oops', 'Combinaison Login/Mot de passe invalide');
         });
-        Keyboard.dismiss();
+        
+    }
+    
+    _onVisitor = async => {
+        const {navigate} = this.props.navigation;
+        this._setUniqueId();
+        navigate('Wall');
+    }
+
+    _setUniqueId = async => {
+        dataId = {
+            key: 'id',
+            value: Constants.deviceId
+        };
+        this._storeData(dataId);
     }
 
     _storeData = async data => {
@@ -89,7 +102,7 @@ export default class LoginScreen extends React.Component {
                         <TouchableOpacity
                             title={'Go'}
                             style={styles.create}
-                            onPress={() => navigate('Wall')/*this.onLogin.bind(this)*/}
+                            onPress={this._onVisitor.bind(this)}
                             underlayColor='#fff'
                         >
                         <Text style={styles.createText}>Consultez la liste des artisans</Text>

@@ -51,6 +51,8 @@ export default class WallScreen extends React.Component {
         .then((response) => {
             artisan = response.data;
             this.setState({artisan});
+        }, (error) => {
+            console.log(error);
         });
         this.setState({refreshing: false});
     }
@@ -65,6 +67,8 @@ export default class WallScreen extends React.Component {
             vote(idItem, this.state.deviceId, this.state.uniqueId)
             .then((response) => {
                 console.log(response.data)
+            }, (error) => {
+                console.log(error)
             })
         }
         this._onRefresh();
