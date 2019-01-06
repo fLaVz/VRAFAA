@@ -113,7 +113,7 @@ export default class AddScreen extends React.Component {
         formData.append('region', this.state.region);
         formData.append('video', {
             uri: this.state.video.uri,
-            name: 'artisanvideo'
+            name: 'artisanvideo.mp4'
         });
         console.log(formData);
         

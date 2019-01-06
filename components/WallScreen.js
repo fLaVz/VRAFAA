@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, RefreshControl, TouchableOpacity, AsyncStorage } from 'react-native';
 import { getArtisans, vote } from './config/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Video } from 'expo';
 
 export default class WallScreen extends React.Component {
 
@@ -19,7 +20,7 @@ export default class WallScreen extends React.Component {
         }
     }
 
-    
+
     componentWillMount = async () => {
         await this._getArtisans();
         this._updateLikes();
@@ -99,6 +100,15 @@ export default class WallScreen extends React.Component {
                             <Text style={styles.artisan}>{item.name}&nbsp;
                                 <Text style={styles.textlight}>@{item.region}</Text>
                             </Text>
+                            <Video
+                                source={{ uri: item.video }}
+                                rate={1.0}
+                                volume={1.0}
+                                isMuted={true}
+                                resizeMode="cover"
+                                shouldPlay
+                                style={styles.video}
+                            />
                             <TouchableOpacity
                             title={'Heart'}
                             style={styles.like}
@@ -155,5 +165,13 @@ const styles = StyleSheet.create({
     },  
     like: {
         paddingTop: 20,
+    },
+    video: {
+        marginTop: 20,
+        width: 300,
+        height: 200,
+        borderWidth: 1,
+        borderColor: '#3a444c',
+        borderRadius: 5
     }
 });
