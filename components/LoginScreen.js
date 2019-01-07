@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, AsyncStorage, TextInput, ImageBackground, StatusBar, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import { login } from './config/api';
-import { Constants } from 'expo';
+import { Constants, Location, Permissions } from 'expo';
+import axios from 'axios';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
@@ -15,19 +16,16 @@ export default class LoginScreen extends React.Component {
             password: '',
         };
     }
-    onLogin() {
+    onLogin = async () => {
         Keyboard.dismiss();
         const {navigate} = this.props.navigation;
         login(this.state)
         .then(response => { 
             console.log(response.data)
             if(response.data.token) {
-                dataToken = {
-                    key: 'token',
-                    value: response.data.token
-                };
+                this._setRegion();
                 this._setUniqueId()
-                this._storeData(dataToken);
+                this._storeData({key: 'token', value: response.data.token});
                 navigate('Wall');
             }
         }, (error) => {
@@ -36,13 +34,34 @@ export default class LoginScreen extends React.Component {
         
     }
     
-    _onVisitor = async => {
+    _setRegion = async () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+          this.setState({errorMessage: 'Permission to access location was denied',});
+        }else {
+            let location = await Location.getCurrentPositionAsync({});
+            axios.get(
+                'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + location.coords.latitude + 
+                '&lon=' + location.coords.longitude + 
+                '&zoom=5'
+            )
+            .then(response => { 
+                if(response.data.address.state) {
+                    console.log(response.data.address.state) 
+                    this._storeData({key: 'region', value: response.data.address.state});
+                }
+            })
+        }
+    }
+
+    _onVisitor = async () => {
         const {navigate} = this.props.navigation;
-        this._setUniqueId();
+        await this._setUniqueId();
+        await this._setRegion();
         navigate('Wall');
     }
 
-    _setUniqueId = async => {
+    _setUniqueId = async () => {
         dataId = {
             key: 'id',
             value: Constants.deviceId
@@ -50,7 +69,7 @@ export default class LoginScreen extends React.Component {
         this._storeData(dataId);
     }
 
-    _storeData = async data => {
+    _storeData = async (data) => {
         try {
             await AsyncStorage.setItem(data.key, data.value);
         } catch (error) {

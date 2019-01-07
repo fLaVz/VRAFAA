@@ -23,8 +23,9 @@ const createArtisan = async (data, headers) => {
     }
 }
 
-const getArtisans = async () => {
-    return axios.get(baseUri + '/artisans')
+const getArtisans = async (region) => {
+    console.log(region);
+    return axios.get(baseUri + '/artisans?region=' + region)
 }
 
 const vote = async (data, id, tk) => {

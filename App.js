@@ -56,7 +56,7 @@ const RootStack = createStackNavigator(
 
 _logout = async (navigation) => {
     const {navigate} = navigation;
-    AsyncStorage.clear();
+    await AsyncStorage.removeItem('token');
     navigate('Login');
 }
 
