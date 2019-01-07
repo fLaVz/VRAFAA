@@ -47,7 +47,7 @@ export default class LoginScreen extends React.Component {
             )
             .then(response => { 
                 if(response.data.address.state) {
-                    console.log(response.data.address.state) 
+                    console.log(response.data.address.state);
                     this._storeData({key: 'region', value: response.data.address.state});
                 }
             })

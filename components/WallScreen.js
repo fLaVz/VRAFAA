@@ -112,7 +112,7 @@ export default class WallScreen extends React.Component {
                                 volume={1.0}
                                 isMuted={true}
                                 resizeMode="cover"
-                                shouldPlay
+                                useNativeControls
                                 style={styles.video}
                             />
                             <TouchableOpacity
@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
         height: 200,
         borderWidth: 1,
         borderColor: '#3a444c',
-        borderRadius: 5
+        borderRadius: 5,
+        overflow: 'hidden'
     }
 });
