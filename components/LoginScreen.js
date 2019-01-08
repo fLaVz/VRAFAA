@@ -43,15 +43,15 @@ export default class LoginScreen extends React.Component {
 
     _onVisitor = async () => {
         const {navigate} = this.props.navigation;
-        await this._getRegion();
-        this._setUniqueId();
-        console.log('HALO: ' + this.state.region)
-        if(this.state.region !== 'test') {
-
+        this._getRegion()
+        .then(location => {
+            this._setUniqueId();
+            console.log('HALO: ' + location)
             navigate('Wall', {
-                region: this.state.region,
+                region: location,
             });
-        }
+        })
+        .catch(error => this.setState({ errorMessage: error }));
     }
 
     _setUniqueId = async () => {
