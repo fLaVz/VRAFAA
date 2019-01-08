@@ -23,42 +23,27 @@ export default class LoginScreen extends React.Component {
         .then(response => { 
             console.log(response.data)
             if(response.data.token) {
-                this._setRegion();
                 this._setUniqueId()
                 this._storeData({key: 'token', value: response.data.token});
-                navigate('Wall');
+                this._getRegion();
+                console.log('HALO: '+this.state.region)
+                navigate('Wall', {
+                    region: this.state.region,
+                });
             }
         }, (error) => {
             Alert.alert('Oops', 'Combinaison Login/Mot de passe invalide');
         });
         
     }
-    
-    _setRegion = async () => {
-        let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
-          this.setState({errorMessage: 'Permission to access location was denied',});
-        }else {
-            let location = await Location.getCurrentPositionAsync({});
-            axios.get(
-                'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + location.coords.latitude + 
-                '&lon=' + location.coords.longitude + 
-                '&zoom=5'
-            )
-            .then(response => { 
-                if(response.data.address.state) {
-                    console.log(response.data.address.state);
-                    this._storeData({key: 'region', value: response.data.address.state});
-                }
-            })
-        }
-    }
 
     _onVisitor = async () => {
         const {navigate} = this.props.navigation;
         await this._setUniqueId();
-        await this._setRegion();
-        navigate('Wall');
+        this._getRegion();
+        navigate('Wall', {
+            region: this.state.region,
+        });
     }
 
     _setUniqueId = async () => {
@@ -74,6 +59,26 @@ export default class LoginScreen extends React.Component {
             await AsyncStorage.setItem(data.key, data.value);
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    _getRegion = async () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+          this.setState({errorMessage: 'Permission to access location was denied',});
+        }else {
+            let location = await Location.getCurrentPositionAsync({});
+            axios.get(
+                'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + location.coords.latitude + 
+                '&lon=' + location.coords.longitude + 
+                '&zoom=5'
+            )
+            .then(response => { 
+                if(response.data.address.state) {
+                    console.log(response.data.address.state);
+                    this.setState({region: response.data.address.state});
+                }
+            })
         }
     }
 

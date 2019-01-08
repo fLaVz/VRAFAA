@@ -24,7 +24,6 @@ const createArtisan = async (data, headers) => {
 }
 
 const getArtisans = async (region) => {
-    console.log(region);
     return axios.get(baseUri + '/artisans?region=' + region)
 }
 
@@ -32,7 +31,7 @@ const vote = async (data, id, tk) => {
     obj = {
         artisan: data,
         uniqueId: id,
-        token: tk,
+        token: tk
     }
     return axios.post(baseUri + '/artisans/vote', obj);
 }

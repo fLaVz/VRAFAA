@@ -2,13 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, RefreshControl, TouchableOpacity, AsyncStorage, Alert } from 'react-native';
 import { getArtisans, vote } from './config/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Video } from 'expo';
+import { Video, Permissions, Location } from 'expo';
+import axios from 'axios';
 
 export default class WallScreen extends React.Component {
 
-    static navigationOptions = {
-        headerBackTitle: 'test'
-    }
     constructor(props) {
         super(props)
 
@@ -17,16 +15,16 @@ export default class WallScreen extends React.Component {
         this.state = {
             refreshing: false,
             iconColor: {},
+            token: null
         }
     }
 
-
     componentWillMount = async () => {
-        await this._retrieveData('region')
+        await this.setState({region: this.props.navigation.state.params.region})
         await this._getArtisans();
         await this._updateLikes();
+        console.log(this.state.artisan);
     }
-
 
     _updateLikes = async () => {
         this.state.artisan.forEach((item) => {
@@ -46,7 +44,7 @@ export default class WallScreen extends React.Component {
             artisan = response.data;    
             this.setState({artisan})
         });
-        console.log(this.state.artisan);
+        console.log('getArtisans: ' + this.state.artisan);
     }
 
     _onRefresh = async () => {
@@ -60,21 +58,17 @@ export default class WallScreen extends React.Component {
     }
 
     _onLike = async (idItem) => {
-        if(this.state.iconColor[idItem] == '#ff0059') {
-            this.state.iconColor[idItem] = '#fff'
-        }else {
-            await this._retrieveData('token');
-            await this._retrieveData('id');
-            vote(idItem, this.state.deviceId, this.state.token)
-            .then((response) => {
-                console.log(response.data)
-                this.state.iconColor[idItem] = '#ff0059'
-            }, (reason) => {
-                console.log(reason);
-                Alert.alert('Oops!', 'Vous ne pouvez voter qu\'une fois par jour');
-            })
-        }
-        
+        await this._retrieveData('token');
+        await this._retrieveData('id');
+        vote(idItem, this.state.deviceId, this.state.token)
+        .then((response) => {
+            console.log(response)
+            this.state.iconColor[idItem] = '#ff0059';
+            this._onRefresh();
+        }, (reason) => {
+            console.log(reason);
+            Alert.alert('Oops!', 'Vous ne pouvez voter qu\'une fois par jour');
+        })
     }
 
     _retrieveData = async (key) => {
@@ -82,12 +76,10 @@ export default class WallScreen extends React.Component {
             const data = await AsyncStorage.getItem(key);
             if(key == 'token' && data !== null) {
                 this.setState({token: data})
-                console.log(this.state.token)
+                console.log('retrieveData' + this.state.token)
             }else if(key == 'id' && data !== null) {
                 this.setState({deviceId: data})
-                console.log(this.state.deviceId)
-            }else if (key == 'region' && data !== null) {
-                this.setState({region: data})
+                console.log('retrieveData: ' + this.state.deviceId)
             }
         } catch (error) {
                 console.log(error)
