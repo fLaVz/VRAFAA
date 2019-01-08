@@ -1,7 +1,8 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, View, TextInput, StatusBar, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import axios from 'axios';
+import { Alert, StyleSheet, Text, View, TextInput, StatusBar, TouchableOpacity, TouchableWithoutFeedback, Keyboard, AsyncStorage } from 'react-native';
 import { createAccount } from './config/api';
+import { Permissions, Location, Constants } from 'expo';
+import axios from 'axios';
 
 export default class CreateAccount extends React.Component {
 
@@ -15,18 +16,69 @@ export default class CreateAccount extends React.Component {
         };
     }
     
-    onCreate() {
+    onCreate = async () => {
+        Keyboard.dismiss();
         const {navigate} = this.props.navigation;
         createAccount(this.state)
         .then(response => { 
-            console.log(response.data)
+            console.log(response.data.token)
             if(response.data.token) {
-                Alert.alert('Compte Créé' ,'Veuillez vous identifier');
-                navigate('Login');
+                try {
+                    data = {
+                        key: 'token',
+                        value: response.data.token
+                    };
+                    AsyncStorage.setItem(data.key, data.value);
+                }catch(e) {
+                    console.log(e);
+                }
+                this._getRegion()
+                .then(location => {
+                    this._setUniqueId();
+                    navigate('Wall', {
+                        region: location,
+                    });
+                })
+                .catch(error => this.setState({ errorMessage: error }));
+            }else {
+                Alert.alert('Oops', 'Ce compte existe déjà!')
             }
         });
-        Keyboard.dismiss();
     }
+
+    _setUniqueId = async () => {
+        dataId = {
+            key: 'id',
+            value: Constants.deviceId
+        };
+        await AsyncStorage.setItem(dataId.key, dataId.value)
+    }
+
+    _getRegion = () => {
+        return new Promise((resolve, reject) => {
+            let { status } = Permissions.askAsync(Permissions.LOCATION).then(({ status }) => {
+                if (status !== 'granted') {
+                    reject('Permission to access location was denied');
+                }else {
+                    Location.getCurrentPositionAsync({}).then(location => {
+                        axios.get(
+                            'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + location.coords.latitude + 
+                            '&lon=' + location.coords.longitude + 
+                            '&zoom=5'
+                        )
+                        .then(response => { 
+                            if(response.data.address.state) {
+                                console.log(response.data.address.state);
+                                resolve(response.data.address.state);
+                            }
+                        })
+                    });
+                }
+            });
+        });
+    }
+
+
     render() {
         const {navigate} = this.props.navigation;
         return (
