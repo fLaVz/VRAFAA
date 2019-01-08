@@ -44,7 +44,7 @@ export default class LoginScreen extends React.Component {
         this._setUniqueId();
         console.log('HALO: ' + this.state.region)
         if(this.state.region !== 'test') {
-            
+
             navigate('Wall', {
                 region: this.state.region,
             });
