@@ -3,7 +3,11 @@ import { AsyncStorage } from 'react-native';
 
 const baseUri = 'http://192.168.1.99:4000';
 
-const login = async (data) => {
+const login = async (email, password) => {
+    data = {
+        email: email,
+        password: password
+    }
     return axios.post(baseUri + '/login', data)
 }
 
@@ -27,11 +31,10 @@ const getArtisans = async (region) => {
     return axios.get(baseUri + '/artisans?region=' + region)
 }
 
-const vote = async (data, id, tk) => {
+const vote = async (data, id) => {
     obj = {
         artisan: data,
         uniqueId: id,
-        token: tk
     }
     return axios.post(baseUri + '/artisans/vote', obj);
 }

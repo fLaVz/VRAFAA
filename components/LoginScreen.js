@@ -14,19 +14,20 @@ export default class LoginScreen extends React.Component {
         this.state = {
             email: '',
             password: '',
+            region: 'test'
         };
     }
     onLogin = async () => {
         Keyboard.dismiss();
         const {navigate} = this.props.navigation;
-        login(this.state)
+        login(this.state.email, this.state.password)
         .then(response => { 
             console.log(response.data)
             if(response.data.token) {
+                this._getRegion();
                 this._setUniqueId()
                 this._storeData({key: 'token', value: response.data.token});
-                this._getRegion();
-                console.log('HALO: '+this.state.region)
+                console.log('HALO: ' + this.state.region)
                 navigate('Wall', {
                     region: this.state.region,
                 });
@@ -39,11 +40,15 @@ export default class LoginScreen extends React.Component {
 
     _onVisitor = async () => {
         const {navigate} = this.props.navigation;
-        await this._setUniqueId();
-        this._getRegion();
-        navigate('Wall', {
-            region: this.state.region,
-        });
+        await this._getRegion();
+        this._setUniqueId();
+        console.log('HALO: ' + this.state.region)
+        if(this.state.region !== 'test') {
+            
+            navigate('Wall', {
+                region: this.state.region,
+            });
+        }
     }
 
     _setUniqueId = async () => {

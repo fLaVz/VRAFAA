@@ -2,20 +2,16 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, RefreshControl, TouchableOpacity, AsyncStorage, Alert } from 'react-native';
 import { getArtisans, vote } from './config/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Video, Permissions, Location } from 'expo';
-import axios from 'axios';
+import { Video } from 'expo';
 
 export default class WallScreen extends React.Component {
 
     constructor(props) {
         super(props)
-
         this._onLike = this._onLike.bind(this),
-
         this.state = {
             refreshing: false,
             iconColor: {},
-            token: null
         }
     }
 
@@ -58,11 +54,12 @@ export default class WallScreen extends React.Component {
     }
 
     _onLike = async (idItem) => {
-        await this._retrieveData('token');
         await this._retrieveData('id');
-        vote(idItem, this.state.deviceId, this.state.token)
+        console.log('ITEM: ', idItem);
+        console.log('DEVICE: ', this.state.deviceId);
+        vote(idItem, this.state.deviceId)
         .then((response) => {
-            console.log(response)
+            console.log(response.data)
             this.state.iconColor[idItem] = '#ff0059';
             this._onRefresh();
         }, (reason) => {
@@ -76,7 +73,7 @@ export default class WallScreen extends React.Component {
             const data = await AsyncStorage.getItem(key);
             if(key == 'token' && data !== null) {
                 this.setState({token: data})
-                console.log('retrieveData' + this.state.token)
+                console.log('retrieveData: ' + this.state.token)
             }else if(key == 'id' && data !== null) {
                 this.setState({deviceId: data})
                 console.log('retrieveData: ' + this.state.deviceId)
