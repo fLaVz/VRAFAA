@@ -15,6 +15,7 @@
     "react-native-customized-image-picker": "^0.1.4",
     "react-native-device-info": "^0.24.3",
     "react-native-image-picker": "^0.27.2",
+    "react-native-maps": "^0.22.1",
     "react-native-permissions": "^1.1.1",
     "react-native-reanimated": "^1.0.0-alpha.10",
     "react-native-vector-icons": "^6.1.0",
