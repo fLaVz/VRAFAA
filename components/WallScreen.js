@@ -16,6 +16,7 @@ export default class WallScreen extends React.Component {
     }
 
     componentWillMount = async () => {
+        console.log('Wall region', this.props.navigation.state.params.region)
         await this.setState({region: this.props.navigation.state.params.region})
         await this._getArtisans();
         await this._updateLikes();
