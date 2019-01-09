@@ -7,3 +7,7 @@ If you want to test it:
 - npm start
 - use expo app to load the app on your mobile
 
+# Ip
+
+Change api ip adress in components/config/api.js
+

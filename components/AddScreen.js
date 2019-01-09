@@ -54,9 +54,7 @@ export default class AddScreen extends React.Component {
                 ],
                 { cancelable: false }
               )
-        }
-        
-            
+        } 
     };
 
     _getLocationAsync = async () => {

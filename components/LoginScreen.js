@@ -53,7 +53,7 @@ export default class LoginScreen extends React.Component {
         })
         .catch(error => this.setState({ errorMessage: error }));
     }
-
+    
     _setUniqueId = async () => {
         dataId = {
             key: 'id',
